@@ -111,7 +111,7 @@ gmServiceGmail.prototype = {
     var loginData = {
       "service" : "mail",
       "continue" : encodeURIComponent(this._checkURL + (aContinueData || "")),
-      "Email" : encodeURIComponent(this.isHosted ? this.username : this.email),
+      "Email" : encodeURIComponent(this.email),
       "Passwd" : encodeURIComponent(aPassword)
     };
     
@@ -213,15 +213,14 @@ gmServiceGmail.prototype = {
     this._domain = this.email.split("@")[1];
     
     // Check if the email is hosted
+	this._loginURL = "https://accounts.google.com/ServiceLoginAuth?service=mail";
     if (this.isHosted)
     {
-      this._loginURL = "https://www.google.com/a/" + this.domain + "/LoginAction2?service=mail";
       this._checkURL = "https://mail.google.com/a/" + this.domain + "/?";
       this._atomURL = "https://mail.google.com/a/" + this.domain + "/feed/atom/";
     }
     else
     {
-      this._loginURL = "https://accounts.google.com/ServiceLoginAuth?service=mail";
       this._checkURL = "https://mail.google.com/mail/?";
       this._atomURL = "https://mail.google.com/mail/feed/atom/";
     }
@@ -549,7 +548,8 @@ gmServiceGmail.prototype = {
           }
           
           try {
-            var tbMatches = data.match(/\["tb",(?:.|\s)+?](?:\s]){2,}(?!\s,,)/g);
+            //var tbMatches = data.match(/\["tb",(?:.|\s)+?](?:\s]){2,}(?!\s,,)/g);
+			var tbMatches = data.match(/\["tb",(?:.|\s)+?(?=,\["t[be]")/g);
             
             // Initialize the snippets
             this._snippets = [];
@@ -557,7 +557,6 @@ gmServiceGmail.prototype = {
             for (var i = 0, n = tbMatches.length; i < n; i++)
             {
               var snippets = jsonParse(tbMatches[i]);
-              
               snippets[2].forEach(function(snippet, index, array) {
                 // Check if the snippet is unread
                 if (snippet[3] === 0)
