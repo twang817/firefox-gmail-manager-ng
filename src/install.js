@@ -3,7 +3,7 @@
 // Based on Gmail Manager by Todd Long <longfocus@gmail.com>
 
 const EXTENSION = "Gmail Manager NG";
-const VERSION   = "0.6.5";
+const VERSION   = "0.6.5.2.2";
 const ID        = "gmail-manager-ng@nedwidek.github.com";
 const NAME      = "gmanager";
 const KEY       = "/gmanager";
